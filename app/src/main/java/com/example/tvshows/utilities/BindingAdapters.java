@@ -1,5 +1,6 @@
 package com.example.tvshows.utilities;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -27,7 +28,7 @@ public class BindingAdapters {
             });
 
         } catch (Exception ignored) {
-
+            Log.d("TAG", ignored.toString());
         }
     }
 
