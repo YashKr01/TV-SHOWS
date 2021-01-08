@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.tvshows.R;
 import com.example.tvshows.adapters.TVShowsAdapter;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TVShowListener {
 
-    private ActivityMainBinding activityMainBinding;
+    private ActivityMainBinding binding;
     private MostPopularTVShowsViewModel viewModel;
     private List<TVShow> tvShows = new ArrayList<>();
     private TVShowsAdapter tvShowsAdapter;
@@ -32,21 +33,21 @@ public class MainActivity extends AppCompatActivity implements TVShowListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         doInitialization();
 
     }
 
     private void doInitialization() {
-        activityMainBinding.tvShowsRecyclerView.setHasFixedSize(true);
+        binding.tvShowsRecyclerView.setHasFixedSize(true);
         viewModel = new ViewModelProvider(this).get(MostPopularTVShowsViewModel.class);
         tvShowsAdapter = new TVShowsAdapter(tvShows, this);
-        activityMainBinding.tvShowsRecyclerView.setAdapter(tvShowsAdapter);
-        activityMainBinding.tvShowsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.tvShowsRecyclerView.setAdapter(tvShowsAdapter);
+        binding.tvShowsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (!activityMainBinding.tvShowsRecyclerView.canScrollVertically(1)) {
+                if (!binding.tvShowsRecyclerView.canScrollVertically(1)) {
                     if (currentPage <= totalAvailablePages) {
                         currentPage += 1;
                         getMostPopularTVShows();
@@ -55,9 +56,12 @@ public class MainActivity extends AppCompatActivity implements TVShowListener {
             }
         });
 
-        activityMainBinding.imageWatchList.setOnClickListener(v ->
+        binding.imageWatchList.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), WatchListActivity.class))
         );
+        binding.imageSearch.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class)));
+
         getMostPopularTVShows();
     }
 
@@ -79,16 +83,16 @@ public class MainActivity extends AppCompatActivity implements TVShowListener {
 
     private void toggleLoading() {
         if (currentPage == 1) {
-            if (activityMainBinding.getIsLoading() != null && activityMainBinding.getIsLoading()) {
-                activityMainBinding.setIsLoading(false);
+            if (binding.getIsLoading() != null && binding.getIsLoading()) {
+                binding.setIsLoading(false);
             } else {
-                activityMainBinding.setIsLoading(true);
+                binding.setIsLoading(true);
             }
         } else {
-            if (activityMainBinding.getIsLoadingMore() != null && activityMainBinding.getIsLoadingMore()) {
-                activityMainBinding.setIsLoadingMore(false);
+            if (binding.getIsLoadingMore() != null && binding.getIsLoadingMore()) {
+                binding.setIsLoadingMore(false);
             } else {
-                activityMainBinding.setIsLoadingMore(true);
+                binding.setIsLoadingMore(true);
             }
         }
     }
