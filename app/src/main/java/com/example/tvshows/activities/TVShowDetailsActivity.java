@@ -27,6 +27,7 @@ import com.example.tvshows.adapters.ImageSliderAdapter;
 import com.example.tvshows.databinding.ActivityTVShowDetailsBinding;
 import com.example.tvshows.databinding.LayoutEpisodesBottomSheetBinding;
 import com.example.tvshows.models.TVShow;
+import com.example.tvshows.utilities.TempDataHolder;
 import com.example.tvshows.viewmodels.TVShowDetailsViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -45,6 +46,7 @@ public class TVShowDetailsActivity extends AppCompatActivity {
     private BottomSheetDialog episodesBSheetDialog;
     private LayoutEpisodesBottomSheetBinding layoutEpisodesBottomSheetBinding;
     private TVShow tvShow;
+    private Boolean iSAvailable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,20 @@ public class TVShowDetailsActivity extends AppCompatActivity {
         tvShowDetailsViewModel = new ViewModelProvider(this).get(TVShowDetailsViewModel.class);
         binding.imageBack.setOnClickListener(v -> onBackPressed());
         tvShow = (TVShow) getIntent().getSerializableExtra("tvShow");
+        checkTVShowInWatchList();
         getTvShowDetails();
+    }
+
+    private void checkTVShowInWatchList() {
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        compositeDisposable.add(tvShowDetailsViewModel.getTVShowFromWatchList(String.valueOf(tvShow.getId()))
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tvShow -> {
+                    iSAvailable = true;
+                    binding.imageWatchList.setImageResource(R.drawable.ic_check);
+                    compositeDisposable.dispose();
+                }));
     }
 
     private void getTvShowDetails() {
@@ -158,16 +173,38 @@ public class TVShowDetailsActivity extends AppCompatActivity {
 
                 });
 
-                binding.imageWatchList.setOnClickListener(v -> new CompositeDisposable()
-                        .add(tvShowDetailsViewModel.addToWatchList(tvShow)
+                binding.imageWatchList.setOnClickListener(v ->
+                {
+                    CompositeDisposable compositeDisposable = new CompositeDisposable();
+                    if (iSAvailable) {
+
+                        compositeDisposable.add(tvShowDetailsViewModel.removeTVShowFromWatchList(tvShow)
+                                .subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+
+                                    iSAvailable = false;
+                                    TempDataHolder.IS_WATCHLIST_UPDATED = true;
+                                    binding.imageWatchList.setImageResource(R.drawable.ic_watchlist);
+                                    Toast.makeText(getApplicationContext(), "Removed from watchlist", Toast.LENGTH_SHORT).show();
+                                    compositeDisposable.dispose();
+
+                                }));
+
+                    } else {
+                        compositeDisposable.add(tvShowDetailsViewModel.addToWatchList(tvShow)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(() -> {
+                                    TempDataHolder.IS_WATCHLIST_UPDATED = true;
                                     binding.imageWatchList.setImageResource(R.drawable.ic_check);
                                     Toast.makeText(getApplicationContext(), "Added To WatchList",
                                             Toast.LENGTH_SHORT).show();
+                                    compositeDisposable.dispose();
                                 })
-                        ));
+                        );
+                    }
+                });
 
                 binding.imageWatchList.setVisibility(View.VISIBLE);
 
