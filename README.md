@@ -51,7 +51,8 @@
 
 # DEPENDENCIES
     
-    `// Material Design
+    ```
+    // Material Design
     implementation 'com.google.android.material:material:1.2.1'
 
     // Retrofit and Gson
@@ -78,6 +79,7 @@
 
     // Rounded ImageView
     implementation 'com.makeramen:roundedimageview:2.3.0'
-`
+    
+    ```
 
 
