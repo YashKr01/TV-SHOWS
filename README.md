@@ -1,53 +1,36 @@
 # DESCRIPTIONS
 
  App Name - **TV-SHOWS**
- 
- Language Used - **JAVA**
- 
+ Language Used - **JAVA** 
  Architecture Used - **MVVM**
- 
  
 # FEATURES
  
  1. Displays TV shows
- 
- 2. Local cache
- 
+ 2. Local cache 
  3. Search API
-
- 4. TV shows description
- 
+ 4. TV shows description 
  5. Episodes List
  
 # COMPONENTS
 
- 1. MVVM Architeture
- 
- 2. Android Architecture Components
- 
- 3. Retrofit
- 
+ 1. MVVM Architeture 
+ 2. Android Architecture Components 
+ 3. Retrofit 
  4. ROOM database
- 
- 5. RxJava
- 
+ 5. RxJava 
  6. Databinding
- 
  7. Picasso Image Processing
  
 # API USED
 
  [episodate API](https://www.episodate.com/api)
  
-# SCREENSHOTS
+ # SCREENSHOTS
 
-![](Images/img1.jpg) ![](Images/img2.jpg)
-
-![](Images/img3.jpg)
-
-![](Images/img4.jpg)
-
-![](Images/img5.jpg)
+ | POPULAR SHOWS | SHOW DETAILS | EPISODES LIST | SEARCH SHOWS | WISHLIST | 
+ --------------|------------|-------------|-----------|-----------|
+ | ![](Images/img1.jpg) | ![](Images/img2.jpg)  | ![](Images/img3.jpg) | ![](Images/img4.jpg) | ![](Images/img5.jpg)
 
 # DEPENDENCIES
     
